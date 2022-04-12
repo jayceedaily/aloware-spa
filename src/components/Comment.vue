@@ -27,8 +27,7 @@
 				<button href="#" @click="handleShowReplies(1)">
         			<RefreshIcon v-if="repliesLoading" class="h-5 w-5 inline-block mr-2 animate-reverse-spin" />
 					<ArrowRightIcon v-else class="h-5 w-5  inline-block"/>
-					
-					{{repliesLoading ? 'Loading' : comment.replies_count + ' Replies'}}
+					{{repliesLoading ? 'Loading' : comment.replies_count + ( comment.replies_count > 1 ? ' Replies' : ' Reply')}}
 				</button>
 			</span>
 		</div>
