@@ -13,8 +13,8 @@
 			<span v-if=" !showReplies &&  comment.replies_count > 0" class="mr-3"> <button href="#" @click="handleShowReplies(1)">{{comment.replies_count}} Replies </button></span>
 		</div>
 		<form action="" @submit.prevent="createCommentReply" v-if="showReplyForm" class="mb-3">
-			<input type="text" name="" id="" class="w-full border mb-3 rounded-sm" v-model="newComment.name">
-			<textarea name="" id="" cols="30" rows="5" class="mb-3 w-full border rounded-sm" v-model="newComment.body"></textarea>
+			<input placeholder="username" required type="text" name="" id="" class="w-full border mb-3 rounded-sm" v-model="newComment.name">
+			<textarea placeholder="Write something here..." required name="" id="" cols="30" rows="5" class="mb-3 w-full border rounded-sm" v-model="newComment.body"></textarea>
 			<div class="w-full">
 
 				<button :disabled="newCommentIsLoading" class="mr-3  text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -120,7 +120,6 @@ export default {
 
 				newCommentIsLoading.value = false;
 			})
-
 		};
 
 		return {
