@@ -1,8 +1,21 @@
 <template>
 	<div>
-		<div class="font-medium">
-			{{comment.name}} <span class="ml-1 text-gray-500 font-normal text-sm ">{{moment(comment.created_at).fromNow()}}</span>
+		<div class="flex mb-1">
+			<div class="flex">
+				<FakeAvatar class="inline-block w-10 h-10 mr-2" :value="comment.name"/>
+			</div>
+			<div class="flex">
+				<div>
+					<div class="font-medium">
+						
+						{{comment.name}} 
+					</div>
+					<div class=" text-gray-500 font-normal text-sm ">{{moment(comment.created_at).fromNow()}}</div>
+					
+				</div>
+			</div>
 		</div>
+		
 		<div>
 			{{comment.body}}
 		</div>
@@ -12,6 +25,7 @@
 		<div class=" font-medium">
 			<span v-if=" !showReplies &&  comment.replies_count > 0" class="mr-3"> <button href="#" @click="handleShowReplies(1)">{{comment.replies_count}} Replies </button></span>
 		</div>
+
 		<form action="" @submit.prevent="createCommentReply" v-if="showReplyForm" class="mb-3">
 			<input placeholder="username" required type="text" name="" id="" class="w-full border mb-3 rounded-sm" v-model="newComment.name">
 			<textarea placeholder="Write something here..." required name="" id="" cols="30" rows="5" class="mb-3 w-full border rounded-sm" v-model="newComment.body"></textarea>
@@ -48,6 +62,7 @@ import moment from 'moment';
 import { ref } from '@vue/reactivity';
 import axios from 'axios';
 import Comment from './Comment.vue';
+import FakeAvatar from './FakeAvatar.vue';
 
 export default {
 	name: "Comment",
@@ -67,7 +82,8 @@ export default {
 	},
 
 	components:{
-		Comment
+		Comment,
+		FakeAvatar
 	},
 
 	setup(props) {
