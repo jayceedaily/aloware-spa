@@ -23,7 +23,14 @@
 			<button v-if="maxDepth != level" class="mr-3" @click="showReplyForm = !showReplyForm">Reply</button>
 		</div>
 		<div class=" font-medium">
-			<span v-if=" !showReplies &&  comment.replies_count > 0" class="mr-3"> <button href="#" @click="handleShowReplies(1)">{{comment.replies_count}} Replies </button></span>
+			<span v-if=" !showReplies &&  comment.replies_count > 0" class="mr-3">
+				<button href="#" @click="handleShowReplies(1)">
+        			<RefreshIcon v-if="repliesLoading" class="h-5 w-5 inline-block mr-2 animate-reverse-spin" />
+					<ArrowRightIcon v-else class="h-5 w-5  inline-block"/>
+					
+					{{repliesLoading ? 'Loading' : comment.replies_count + ' Replies'}}
+				</button>
+			</span>
 		</div>
 
 		<form action="" @submit.prevent="createCommentReply" v-if="showReplyForm" class="mb-3">
@@ -63,6 +70,7 @@ import { ref } from '@vue/reactivity';
 import axios from 'axios';
 import Comment from './Comment.vue';
 import FakeAvatar from './FakeAvatar.vue';
+import { ArrowRightIcon, RefreshIcon } from '@heroicons/vue/outline';
 
 export default {
 	name: "Comment",
@@ -83,7 +91,9 @@ export default {
 
 	components:{
 		Comment,
-		FakeAvatar
+		FakeAvatar,
+		ArrowRightIcon,
+		RefreshIcon
 	},
 
 	setup(props) {
@@ -91,6 +101,8 @@ export default {
 		const comments = ref([]);
 
 		const showReplies = ref(false);
+
+		const repliesLoading = ref(false);
 
 		const showReplyForm = ref(false);
 
@@ -106,6 +118,8 @@ export default {
 		const newCommentIsLoading = ref(false);
 
 		const handleShowReplies = (page = 1) => {
+
+			repliesLoading.value = true;
 			
 			axios.get(`https://aloware-api.test/api/comments/${props.comment.id}/replies?page=${page}`).then(response => {
 				
@@ -116,6 +130,8 @@ export default {
 				currentPage.value = response.data.current_page;
 
 				lastPage.value = response.data.last_page;
+
+				repliesLoading.value = false;
 			})
 		};
 
@@ -147,6 +163,7 @@ export default {
 			showReplyForm,
 			currentPage,
 			lastPage,
+			repliesLoading,
 			
 			handleShowReplies,
 			createCommentReply,

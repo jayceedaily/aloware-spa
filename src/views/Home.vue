@@ -21,8 +21,16 @@
     <div v-for="comment in comments" :key="comment.id" class="mb-3">
       <Comment :comment="comment" :maxDepth="3"/>
     </div>
+    
+    <div class="text-center">
+      
+      <button v-if="currentPage <= lastPage" @click="postCommentIndex(currentPage+1)" class="border rounded-md px-5 py-3" :disabled="commentsLoading">
+        <RefreshIcon v-if="commentsLoading" class="h-5 w-5  inline-block mr-2 animate-reverse-spin" />
+        <span>{{commentsLoading ? 'Loading' : 'Load More'}}</span>
+      </button>
 
-    <button v-if="currentPage <= lastPage" @click="postCommentIndex(currentPage+1)">Load More</button>
+    </div>
+
   </div>
     
 </template>
@@ -31,6 +39,7 @@
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
 import Comment from '../components/Comment.vue';
+import { RefreshIcon } from '@heroicons/vue/outline';
 
 import axios from 'axios'
 import { ref } from '@vue/reactivity';
@@ -38,7 +47,8 @@ export default {
   name: 'Home',
   components: {
     HelloWorld,
-    Comment
+    Comment,
+    RefreshIcon
   },
   setup() {
 
@@ -53,8 +63,11 @@ export default {
       });
 
       const newCommentIsLoading = ref(false);
+      const commentsLoading = ref(false);
 
       const postCommentIndex = (page = 1) => {
+
+        commentsLoading.value = true;
 
         axios.get(`https://aloware-api.test/api/posts/1/comments?page=${page}`).then(response => {
 
@@ -63,6 +76,9 @@ export default {
           currentPage.value = response.data.current_page;
 
           lastPage.value = response.data.last_page;
+
+          commentsLoading.value = false;
+
         })
       }
 
@@ -90,6 +106,7 @@ export default {
         newCommentIsLoading,
         currentPage,
         lastPage,
+        commentsLoading,
 
         createPostComment,
         postCommentIndex
