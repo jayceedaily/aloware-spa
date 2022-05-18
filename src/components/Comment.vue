@@ -2,13 +2,13 @@
 	<div>
 		<div class="flex mb-1">
 			<div class="flex">
-				<FakeAvatar class="inline-block w-10 h-10 mr-2" :value="comment.name"/>
+				<FakeAvatar class="inline-block w-10 h-10 mr-2" :value="comment.author?.name"/>
 			</div>
 			<div class="flex">
 				<div>
 					<div class="font-medium">
 						
-						{{comment.name}} 
+						{{comment.author?.name}} 
 					</div>
 					<div class=" text-gray-500 font-normal text-sm ">{{moment(comment.created_at).fromNow()}}</div>
 					
@@ -20,7 +20,7 @@
 			{{comment.body}}
 		</div>
 		<div class="text-xs font-medium pb-2">
-			<button v-if="maxDepth != level" class="mr-3" @click="showReplyForm = !showReplyForm">Reply</button>
+			<button class="mr-3" @click="showReplyForm = !showReplyForm">Reply</button>
 		</div>
 		<div class=" font-medium">
 			<span v-if=" !showReplies &&  comment.replies_count > 0" class="mr-3">
@@ -51,7 +51,7 @@
 
 		<div v-if="showReplies">
 
-			<div class="pl-5 border-l pb-3" v-for="comment in comments" :key="comment.id">
+			<div class="pl-5 border-l " v-for="comment in comments" :key="comment.id">
 				<Comment :comment="comment" :level="level+1" :maxDepth="maxDepth"/>
 			</div>
 
@@ -120,7 +120,7 @@ export default {
 
 			repliesLoading.value = true;
 			
-			axios.get(`https://aloware-api.test/api/comments/${props.comment.id}/replies?page=${page}`).then(response => {
+			axios.get(`https://aloware-api.test/api/threads/${props.comment.id}/replies?page=${page}`).then(response => {
 				
 				comments.value = comments.value.concat(response.data.data)
 
@@ -140,7 +140,7 @@ export default {
 
 			newCommentIsLoading.value = true;
 
-			axios.post(`https://aloware-api.test/api/comments/${props.comment.id}/replies`, newComment.value).then(response => {
+			axios.post(`https://aloware-api.test/api/threads/${props.comment.id}/replies`, newComment.value).then(response => {
 
 				comments.value.unshift(response.data)
 
