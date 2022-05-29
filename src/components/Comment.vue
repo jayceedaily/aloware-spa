@@ -30,9 +30,9 @@
 							<RefreshIcon class="h-5 w-5 "/>
 						</button>
 					
-						<button class="hover:bg-red-100 hover:text-red-500 py-2 px-2 rounded-full">
-							<!-- <HeartIcon class="h-5 w-5 "/> -->
-							<HeartIconSolid class="text-red-500 h-5 w-5 "/>
+						<button class="hover:bg-red-100 hover:text-red-500 py-2 px-2 rounded-full" @click="handleLikeClick">
+							<HeartIconSolid v-if="comment.liked" class="text-red-500 h-5 w-5 "/>
+							<HeartIcon v-else class="h-5 w-5 "/>
 						</button>
 					
 						<button class="hover:text-blue-500 hover:bg-blue-200 py-2 px-2 rounded-full">
@@ -122,38 +122,28 @@ export default {
 
 	setup(props) {
 
-		const comments = ref([]);
-
-		const showReplies = ref(false);
-
-		const repliesLoading = ref(false);
-
-		const showReplyForm = ref(false);
-
-		const currentPage = ref(1);
-    	
-		const lastPage = ref(1);
-
 		const showMenu = ref(false);
 
-		const newComment = ref({
-			name: null,
-			body: null
-		});
+		const handleLikeClick = () => {
 
-		const newCommentIsLoading = ref(false);
+
+			if(props.comment.liked) {
+				axios.delete(`http://aloware-api.test/api/thread/${props.comment.id}/unlike`);
+
+
+			} else {
+				axios.post(`http://aloware-api.test/api/thread/${props.comment.id}/like`);
+
+			}
+
+			props.comment.liked = !props.comment.liked
+		}
 
 		return {
         	moment,
-			comments,
-			showReplies,
-			newComment,
-			newCommentIsLoading,
-			showReplyForm,
-			currentPage,
-			lastPage,
-			repliesLoading,
 			showMenu,
+
+			handleLikeClick
 		}
 	}
 }
