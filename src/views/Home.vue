@@ -1,27 +1,12 @@
 <template>
 
   <div class="container mx-auto pt-10 pb-10">
-    <div class="mb-5">
-      <h1 class="text-3xl font-bold">Fake Post</h1>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat labore odio eum adipisci? Iure et perspiciatis perferendis doloribus, quidem quisquam facere saepe hic reprehenderit atque maxime voluptatem labore? Provident, rem.</p>
-    </div>
-
-    <div class="mb-10">
-      <form action="" @submit.prevent="createPostComment">
-        <input placeholder="Username" required type="text" name="" id="" class="w-full border mb-3 rounded-sm" v-model="newComment.name">
-        <textarea placeholder="Write something here..." name=""  required  id="" cols="30" rows="5" class="w-full border rounded-sm" v-model="newComment.body"></textarea>
-        <button :disabled="newCommentIsLoading" class="  text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              :class="[newCommentIsLoading && 'bg-gray-300 cursor-not-allowed', !newCommentIsLoading && 'bg-blue-500 hover:bg-blue-700']"
-              type="submit">
-          Post Comment
-      </button>
-      </form>
-    </div>
-
-    <div v-for="comment in comments" :key="comment.id" class="mb-3">
-      <Comment :comment="comment" :maxDepth="3"/>
-    </div>
     
+
+      <div v-for="comment in comments" :key="comment.id" class="flex justify-center">
+        <Comment :comment="comment" :maxDepth="3"/>
+      </div>
+
     <div class="text-center">
       
       <button v-if="currentPage <= lastPage" @click="postCommentIndex(currentPage+1)" class="border rounded-md px-5 py-3" :disabled="commentsLoading">
@@ -52,6 +37,9 @@ export default {
   },
   setup() {
 
+
+      axios.defaults.headers.common['Authorization'] = 'Bearer 1|Rc1zv1csIksqQiDRWLnHE4q3oCZ0OVA0esT24u57';
+
       const comments = ref([]);
 
       const currentPage = ref(1);
@@ -69,7 +57,7 @@ export default {
 
         commentsLoading.value = true;
 
-        axios.get(`https://aloware-api.test/api/posts/1/comments?page=${page}`).then(response => {
+        axios.get(`http://aloware-api.test/api/threads?page=${page}`).then(response => {
 
           comments.value = comments.value.concat(response.data.data);
 
@@ -86,7 +74,7 @@ export default {
 
         newCommentIsLoading.value = true;
 
-        axios.post('https://aloware-api.test/api/posts/1/comments', newComment.value).then(response => {
+        axios.post('http://aloware-api.test/api/threads', newComment.value).then(response => {
 
           comments.value.unshift(response.data)
 
