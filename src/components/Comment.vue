@@ -29,11 +29,19 @@
 						<button class="hover:bg-green-100 hover:text-green-500 py-2 px-2 rounded-full">
 							<RefreshIcon class="h-5 w-5 "/>
 						</button>
-					
-						<button class="hover:bg-red-100 hover:text-red-500 py-2 px-2 rounded-full" @click="handleLikeClick">
-							<HeartIconSolid v-if="comment.liked" class="text-red-500 h-5 w-5 "/>
-							<HeartIcon v-else class="h-5 w-5 "/>
-						</button>
+
+
+						<div class="w-10 flex items-center hover:text-red-500">
+
+							<button class="hover:bg-red-100 py-2 px-2 rounded-full flex gap-2 mr-2" @click="handleLikeClick">
+
+								<HeartIconSolid v-if="comment.liked" class="text-red-500 h-5 w-5 "/>
+								<HeartIcon v-else class=" h-5 w-5 "/>
+
+
+							</button>
+								<div v-if="comment.likes_count"> {{comment.likes_count}}</div>
+						</div>
 					
 						<button class="hover:text-blue-500 hover:bg-blue-200 py-2 px-2 rounded-full">
 							<UploadIcon class="h-5 w-5 "/>
@@ -129,11 +137,10 @@ export default {
 
 			if(props.comment.liked) {
 				axios.delete(`http://aloware-api.test/api/thread/${props.comment.id}/unlike`);
-
-
+				props.comment.likes_count--;
 			} else {
 				axios.post(`http://aloware-api.test/api/thread/${props.comment.id}/like`);
-
+				props.comment.likes_count++;
 			}
 
 			props.comment.liked = !props.comment.liked
