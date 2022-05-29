@@ -1,6 +1,6 @@
 <template>
-	<router-link class="pt-3 pb-1 flex max-w-3xl border-b border-gray-300" :to="'/thread/' + comment.id"> 
-		<div class="flex w-full">
+	<div class="pt-3 pb-1 flex max-w-3xl border-b border-gray-300" > 
+		<div class="flex  w-full">
 			<FakeAvatar class="flex-shrink-0 w-10 h-10 mr-2" :value="comment.created_by.name"/>
 			<div>
 				<div class="flex justify-between">
@@ -15,7 +15,7 @@
 					</a>
 				</div>
 
-				<div class=" text-gray-800 font-normal mb-2">{{comment.body}}</div>
+				<router-link class=" text-gray-800 font-normal mb-2"  :to="'/thread/' + comment.id">{{comment.body}}</router-link>
 
 				<div class="w-full flex  gap-10 text-sm justify-between max-w-xl text-gray-400">
 
@@ -31,7 +31,8 @@
 						</button>
 					
 						<button class="hover:bg-red-100 hover:text-red-500 py-2 px-2 rounded-full">
-							<HeartIcon class="h-5 w-5 "/>
+							<!-- <HeartIcon class="h-5 w-5 "/> -->
+							<HeartIconSolid class="text-red-500 h-5 w-5 "/>
 						</button>
 					
 						<button class="hover:text-blue-500 hover:bg-blue-200 py-2 px-2 rounded-full">
@@ -40,12 +41,25 @@
 				</div>
 			</div>
 			<div>
-				<button class="hover:bg-gray-200 py-2 px-2 rounded-full place-content-start text-gray-400">
+				<button class="hover:bg-gray-200 py-2 px-2 rounded-full place-content-start text-gray-400" @click="showMenu =! showMenu">
 					<DotsHorizontalIcon class="h-5 w-5"/>
 				</button>
+
+				<div class="relative inline-block text-left" v-if="showMenu">
+  					<div class="fixed inset-0 bg-opacity-75 transition-opacity" @click="showMenu=false"></div>
+					<div class=" origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+						<div class="py-1" role="none">
+							<a href="#" class="text-gray-700 flex px-4 py-2 text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-0"><BellIcon  class="text-gray-400 h-5 w-5 mr-2"/>Turn On Notification</a>
+							<a href="#" class="text-gray-700 flex px-4 py-2 text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-0"><UserRemoveIcon  class="text-gray-400 h-5 w-5 mr-2"/>Unfollow @{{comment.created_by.username}}</a>
+							<a href="#" class="text-gray-700 flex px-4 py-2 text-sm  hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-1"><VolumeOffIcon  class="text-gray-400 h-5 w-5 mr-2"/>Mute  @{{comment.created_by.username}}</a>
+							<a href="#" class="text-gray-700 flex px-4 py-2 text-sm  hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-2"><CodeIcon  class="text-gray-400 h-5 w-5 mr-2"/>Ember Thread</a>
+							<a href="#" class="text-gray-700 flex px-4 py-2 text-sm  hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-2"><FlagIcon  class="text-gray-400 h-5 w-5 mr-2"/>Report Thread</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-	</router-link>
+	</div>
 </template>
 
 <script>
@@ -55,7 +69,21 @@ import { ref } from '@vue/reactivity';
 import axios from 'axios';
 import Comment from './Comment.vue';
 import FakeAvatar from './FakeAvatar.vue';
-import { ArrowRightIcon, RefreshIcon, AnnotationIcon, HeartIcon, UploadIcon, DotsHorizontalIcon } from '@heroicons/vue/outline';
+import { ArrowRightIcon,
+		RefreshIcon,
+		AnnotationIcon,
+		HeartIcon,
+		UploadIcon,
+		DotsHorizontalIcon,
+		PlusSmIcon,
+		UserRemoveIcon,
+		VolumeOffIcon,
+		FlagIcon,
+		CodeIcon,
+		BellIcon,
+} from '@heroicons/vue/outline';
+
+import {HeartIcon as HeartIconSolid} from '@heroicons/vue/solid';
 
 export default {
 	name: "Comment",
@@ -82,7 +110,14 @@ export default {
 		AnnotationIcon,
 		HeartIcon,
 		UploadIcon,
-		DotsHorizontalIcon
+		DotsHorizontalIcon,
+		PlusSmIcon,
+		UserRemoveIcon,
+		VolumeOffIcon,
+		FlagIcon,
+		CodeIcon,
+		BellIcon,
+		HeartIconSolid
 	},
 
 	setup(props) {
@@ -98,6 +133,8 @@ export default {
 		const currentPage = ref(1);
     	
 		const lastPage = ref(1);
+
+		const showMenu = ref(false);
 
 		const newComment = ref({
 			name: null,
@@ -116,6 +153,7 @@ export default {
 			currentPage,
 			lastPage,
 			repliesLoading,
+			showMenu,
 		}
 	}
 }
