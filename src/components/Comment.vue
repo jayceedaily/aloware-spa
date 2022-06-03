@@ -21,79 +21,57 @@
 
 						<div class="w-10 flex items-center hover:text-blue-500">
 							<button class="hover:bg-blue-100  py-2 px-2 rounded-full  flex gap-2 mr-2">
-								<AnnotationIcon class="h-5 w-5"/>
+								<HeroIcon icon="AnnotationIcon" class="h-5 w-5"/>
 							</button>
 							<div v-if="comment.replies_count"> {{comment.replies_count}}</div>
 						</div>
 
 						<button class="hover:bg-green-100 hover:text-green-500 py-2 px-2 rounded-full">
-							<RefreshIcon class="h-5 w-5 "/>
+							<HeroIcon icon="RefreshIcon" class="h-5 w-5 "/>
 						</button>
 
 
 						<div class="w-10 flex items-center hover:text-red-500">
 
-							<button class="hover:bg-red-100 py-2 px-2 rounded-full flex gap-2 mr-2" @click="handleLikeClick">
+							<button class="hover:bg-red-100 py-2 px-2 rounded-full flex gap-2 mr-2" @click="likeThread">
 
-								<HeartIconSolid v-if="comment.liked" class="text-red-500 h-5 w-5 "/>
-								<HeartIcon v-else class=" h-5 w-5 "/>
-
+								<HeroIcon icon="HeartIcon" type="solid" v-if="comment.liked" class="text-red-500 h-5 w-5 "/>
+								<HeroIcon icon="HeartIcon" v-else class=" h-5 w-5 "/>
 
 							</button>
 								<div v-if="comment.likes_count"> {{comment.likes_count}}</div>
 						</div>
 					
 						<button class="hover:text-blue-500 hover:bg-blue-200 py-2 px-2 rounded-full">
-							<UploadIcon class="h-5 w-5 "/>
+							<HeroIcon icon="UploadIcon" class="h-5 w-5 "/>
 						</button>
 				</div>
 			</div>
 			<div>
 				<button class="hover:bg-gray-200 py-2 px-2 rounded-full place-content-start text-gray-400" @click="showMenu =! showMenu">
-					<DotsHorizontalIcon class="h-5 w-5"/>
+					<HeroIcon icon="DotsHorizontalIcon" class="h-5 w-5"/>
 				</button>
-
-				<div class="relative inline-block text-left" v-if="showMenu">
-  					<div class="fixed inset-0 bg-opacity-75 transition-opacity" @click="showMenu=false"></div>
-					<div class=" origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-						<div class="py-1" role="none">
-							<a href="#" class="text-gray-700 flex px-4 py-2 text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-0"><PencilAltIcon  class="text-gray-400 h-5 w-5 mr-2"/>Edit Thread</a>
-							<a href="#" class="text-gray-700 flex px-4 py-2 text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-0"><BellIcon  class="text-gray-400 h-5 w-5 mr-2"/>Turn On Notification</a>
-							<a href="#" class="text-gray-700 flex px-4 py-2 text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-0"><UserRemoveIcon  class="text-gray-400 h-5 w-5 mr-2"/>Unfollow @{{comment.created_by.username}}</a>
-							<a href="#" class="text-gray-700 flex px-4 py-2 text-sm  hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-1"><VolumeOffIcon  class="text-gray-400 h-5 w-5 mr-2"/>Mute  @{{comment.created_by.username}}</a>
-							<a href="#" class="text-gray-700 flex px-4 py-2 text-sm  hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-2"><CodeIcon  class="text-gray-400 h-5 w-5 mr-2"/>Ember Thread</a>
-							<a href="#" class="text-gray-700 flex px-4 py-2 text-sm  hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-2"><FlagIcon  class="text-gray-400 h-5 w-5 mr-2"/>Report Thread</a>
-						</div>
-					</div>
-				</div>
+				<Option
+					v-if="showMenu"
+					@close="showMenu=!showMenu"
+					@selected="handleSelect"
+					:options="options"/>
 			</div>
 		</div>
 	</div>
+	
 </template>
 
 <script>
 
 import moment from 'moment';
+import Option from '../components/Option/Index.vue';
 import { ref } from '@vue/reactivity';
 import axios from 'axios';
 import Comment from './Comment.vue';
 import FakeAvatar from './FakeAvatar.vue';
-import { ArrowRightIcon,
-		RefreshIcon,
-		AnnotationIcon,
-		HeartIcon,
-		UploadIcon,
-		DotsHorizontalIcon,
-		PlusSmIcon,
-		UserRemoveIcon,
-		VolumeOffIcon,
-		FlagIcon,
-		CodeIcon,
-		BellIcon,
-		PencilAltIcon,
-} from '@heroicons/vue/outline';
-
-import {HeartIcon as HeartIconSolid} from '@heroicons/vue/solid';
+import resolveOptions from './Comment/comment-option';
+import HeroIcon from './HeroIcon/Index.vue';
 
 export default {
 	name: "Comment",
@@ -101,42 +79,25 @@ export default {
 		comment: {
 			type: Object,
 			required: false
-		},
-		level: {
-			type: Number,
-			default: 1
-		},
-		maxDepth: {
-			type: Number,
-			required: true
 		}
 	},
 
 	components:{
-		Comment,
+		Comment,	
 		FakeAvatar,
-		ArrowRightIcon,
-		RefreshIcon,
-		AnnotationIcon,
-		HeartIcon,
-		UploadIcon,
-		DotsHorizontalIcon,
-		PlusSmIcon,
-		UserRemoveIcon,
-		VolumeOffIcon,
-		FlagIcon,
-		CodeIcon,
-		BellIcon,
-		HeartIconSolid,
-		PencilAltIcon
+		HeroIcon,
+		Option
 	},
 
 	setup(props) {
-
 		const showMenu = ref(false);
+		const options = resolveOptions(props.comment.created_by.username);
 
-		const handleLikeClick = () => {
+		const handleSelect = (e) => {
+			console.log(e);
+		}
 
+		const likeThread = () => {
 
 			if(props.comment.liked) {
 				axios.delete(`http://aloware-api.test/api/thread/${props.comment.id}/unlike`);
@@ -152,8 +113,10 @@ export default {
 		return {
         	moment,
 			showMenu,
+			options,
 
-			handleLikeClick
+			likeThread,
+			handleSelect
 		}
 	}
 }
