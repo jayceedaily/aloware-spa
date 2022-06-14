@@ -11,7 +11,12 @@ const routes = [
     path: '/thread/:id',
     name: 'Thread',
     component: import('../views/Thread/Show')
-  }
+  },
+  {
+    path: '/:username',
+    name: 'Profile',
+    component: import('../views/Profile/Index.vue')
+  },
 ]
 
 const router = createRouter({

@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import OptionItem from 'OptionItem.vue';
-import Overlay from 'Overlay.vue';
+import OptionItem from './OptionItem';
+import Overlay from './Overlay';
 export default {
 	name: "Option",
 

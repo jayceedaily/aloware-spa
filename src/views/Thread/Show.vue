@@ -4,7 +4,6 @@
 			<Comment :comment="comment"/>
 		</div>
 		<div class="flex justify-center">
-
 			<div class="">Replies</div>
 		</div>
 
@@ -15,11 +14,11 @@
 </template>
 
 <script>
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter, useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import axios from 'axios'
 import { ref } from '@vue/reactivity';
 import Comment from '../../components/Comment.vue'
-import { watch } from '@vue/runtime-core';
+import { onBeforeMount, onBeforeUnmount, watch } from '@vue/runtime-core';
 
 export default {
 	name: "Show",
@@ -37,12 +36,11 @@ export default {
 
       	axios.defaults.headers.common['Authorization'] = 'Bearer 1|Rc1zv1csIksqQiDRWLnHE4q3oCZ0OVA0esT24u57';
 
-		  
-		const loadReplies = (page = 1) => {
+		const loadReplies = (threadId, page = 1) => {
 
 			repliesLoading.value = true;
 			
-			axios.get(`http://aloware-api.test/api/thread/${route.params.id}/replies?page=${page}`).then(response => {
+			axios.get(`http://aloware-api.test/api/thread/${threadId}/replies?page=${page}`).then(response => {
 				
 				comments.value = comments.value.concat(response.data.data)
 
@@ -55,32 +53,37 @@ export default {
 		};
 
 
-		watch(() => route.params.id, (value) => {
+		onBeforeRouteUpdate(async (to, from) => {
 
-			console.log('here', value);
+			if(to.params.id !== from.params.id) {
+
+				loadThread(to.params.id);
+			}
+		});	
+
+		const loadThread = (threadId) => {
 
 			comments.value = [];
 
-			axios.get(`http://aloware-api.test/api/thread/${route.params.id}`).then(response => {
+			axios.get(`http://aloware-api.test/api/thread/${threadId}`).then(response => {
 
 				comment.value = response.data
 				loading.value = false;
+
+			}).then(() => {
+
+				loadReplies(threadId);
+
 			});
+		}
 
-			loadReplies();
-
-		}, {immediate: true})
-
-
-
-		// loadReplies();
+		loadThread(route.params.id);
 	
 		return {
 			comment,
 			comments,
 			loading,
 			loadReplies
-	
 		}
 	}
 }

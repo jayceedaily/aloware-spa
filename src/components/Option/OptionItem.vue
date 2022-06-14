@@ -16,7 +16,7 @@
 
 <script>
 
-import { computed } from '@vue/runtime-core';
+import { computed } from 'vue';
 import HeroIcon from '../HeroIcon/Index.vue';
 
 

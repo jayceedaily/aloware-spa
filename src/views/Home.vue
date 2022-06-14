@@ -1,11 +1,16 @@
 <template>
 
-  <div class="container mx-auto pt-10 pb-10">
+  <div class="container mx-auto pt-10 pb-10 flex">
     
-
-      <div v-for="comment in comments" :key="comment.id" class="flex justify-center">
-        <Comment :comment="comment" :maxDepth="3"/>
+      <div class="w-1/4 border-r dark:border-gray-700"></div>
+      <div class="w-2/4">
+        <Comment  v-for="comment in comments" :key="comment.id" :comment="comment" :maxDepth="3"/>
       </div>
+      <div class="w-1/4 border-l dark:border-gray-700"></div>
+
+
+
+  </div>
 
     <div class="text-center">
       
@@ -14,10 +19,7 @@
         <span>{{commentsLoading ? 'Loading' : 'Load More'}}</span>
       </button>
 
-    </div>
-
-  </div>
-    
+    </div>    
 </template>
 
 <script>
