@@ -17,7 +17,7 @@
 import { useRouter, useRoute, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 import axios from 'axios'
 import { ref } from '@vue/reactivity';
-import Comment from '../../components/Comment.vue'
+import Comment from '../../components/Comment/Default.vue'
 import { onBeforeMount, onBeforeUnmount, watch } from '@vue/runtime-core';
 
 export default {

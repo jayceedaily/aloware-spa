@@ -1,22 +1,41 @@
 <template>
- 
- <component :is="tweetType" :comment="comment" />
+  <div class="dark:text-gray-300">
+    <div class="flex">
+      <div class="flex-1">
+        <div class="flex content-center">
+          <FakeAvatar
+            class="flex-shrink-0 w-5 h-5 mr-1"
+            :value="comment.created_by.name"
+          />
+          <Nameplate
+            :username="comment.created_by.username"
+            :name="comment.created_by.name"
+            :datetime="comment.created_at"
+          />
+        </div>
 
+        <router-link
+          class="text-gray-800 dark:text-white font-light mb-2"
+          :to="'/thread/' + comment.id"
+          >{{ comment.body }}</router-link
+        >
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import moment from "moment";
-// import Option from "../Option/Index.vue";
-import { ref, computed } from "@vue/reactivity";
+// import Option from "../components/Option/Index.vue";
+import { ref } from "@vue/reactivity";
 import axios from "axios";
-import FakeAvatar from "../FakeAvatar.vue";
-import resolveOptions from "./comment-option";
-import HeroIcon from "../HeroIcon/Index";
-import { defineAsyncComponent } from '@vue/runtime-core';
-
+import FakeAvatar from "./FakeAvatar.vue";
+import resolveOptions from "./Comment/comment-option";
+import HeroIcon from "./HeroIcon/Index.vue";
+import Nameplate from "./Comment/components/Nameplate.vue";
 
 export default {
-  name: "Comment",
+  name: "CommentMini",
   props: {
     comment: {
       type: Object,
@@ -25,33 +44,15 @@ export default {
   },
 
   components: {
-
+    // Comment,
     FakeAvatar,
     HeroIcon,
     Option,
+    Nameplate,
   },
 
   setup(props) {
     const showMenu = ref(false);
-
-
-    const tweetType = computed(() => {
-    //   if (props.comment.parent) {
-    //     return "reply";
-    //   }
-
-    //   if (props.comment.shared && props.comment.body === null) {
-    //     return "retweet";
-    //   }
-
-      if (props.comment.shared && props.comment.body !== null) {
-		return defineAsyncComponent(() => import('./Share.vue'));
-      }
-
-      return defineAsyncComponent(() => import('./Default.vue'));
-    });
-
-
     const options = resolveOptions(props.comment.created_by.username);
 
     const handleSelect = (e) => {
@@ -79,8 +80,6 @@ export default {
       showMenu,
       options,
 
-      
-      tweetType,
       likeThread,
       handleSelect,
     };

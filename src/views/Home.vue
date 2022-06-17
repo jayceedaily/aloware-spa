@@ -4,7 +4,7 @@
     
       <div class="w-1/4 border-r dark:border-gray-700"></div>
       <div class="w-2/4">
-        <Comment  v-for="comment in comments" :key="comment.id" :comment="comment" :maxDepth="3"/>
+        <Comment  v-for="comment in comments" :key="comment.id" :comment="comment"/>
       </div>
       <div class="w-1/4 border-l dark:border-gray-700"></div>
 
@@ -25,9 +25,9 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
-import Comment from '../components/Comment.vue';
-import { RefreshIcon } from '@heroicons/vue/outline';
 
+import { RefreshIcon } from '@heroicons/vue/outline';
+import Comment from '../components/Comment/Index.vue'
 import axios from 'axios'
 import { ref } from '@vue/reactivity';
 export default {
@@ -39,8 +39,7 @@ export default {
   },
   setup() {
 
-
-      axios.defaults.headers.common['Authorization'] = 'Bearer 1|Rc1zv1csIksqQiDRWLnHE4q3oCZ0OVA0esT24u57';
+      axios.defaults.headers.common['Authorization'] = 'Bearer 1|ECEX9pNQWfxIvvAbyrbUBTN7RlgcpVg13fH01lkH';
 
       const comments = ref([]);
 

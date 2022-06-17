@@ -1,7 +1,7 @@
 <template>
 	<a
 		href="#"
-		class="text-gray-700 flex px-4 py-2 text-sm hover:bg-gray-100"
+		class="text-gray-700 dark:text-white flex pl-4 pr-6 py-4 text-sm hover:bg-gray-100 dark:hover:text-gray-600"
 		role="menuitem"
 		tabindex="-1"
 		@click="handleClick">
