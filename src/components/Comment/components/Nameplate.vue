@@ -1,13 +1,13 @@
 <template>
   <div>
     <a class="gap-1 inline-flex" :href="'/' + username">
-      <div class="hover:underline font-medium">
+      <div class="flex hover:underline font-medium">
         {{ name }}
+        <HeroIcon icon="BadgeCheckIcon" type="solid" class="ml-1 w-5" />
       </div>
 
       <div class="flex">
-        @{{ username }}
-        <span><HeroIcon icon="BadgeCheckIcon" type="solid" class="ml-1 w-5"/></span>
+        <span class="dark:text-gray-600"> @{{ username }} </span>
       </div>
 
       <div class="text-gray-600 font-normal">
