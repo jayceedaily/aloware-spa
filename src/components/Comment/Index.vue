@@ -1,7 +1,7 @@
 <template>
- 
- <component :is="tweetType" :comment="comment" />
-
+  <div class="border-b dark:border-gray-700 border-gray-300">
+    <component :is="tweetType" :comment="comment" class="" />
+  </div>
 </template>
 
 <script>
@@ -12,8 +12,7 @@ import axios from "axios";
 import FakeAvatar from "../FakeAvatar.vue";
 import resolveOptions from "./comment-option";
 import HeroIcon from "../HeroIcon/Index";
-import { defineAsyncComponent } from '@vue/runtime-core';
-
+import { defineAsyncComponent } from "@vue/runtime-core";
 
 export default {
   name: "Comment",
@@ -25,7 +24,6 @@ export default {
   },
 
   components: {
-
     FakeAvatar,
     HeroIcon,
     Option,
@@ -34,23 +32,21 @@ export default {
   setup(props) {
     const showMenu = ref(false);
 
-
     const tweetType = computed(() => {
-    //   if (props.comment.parent) {
-    //     return "reply";
-    //   }
-
-    //   if (props.comment.shared && props.comment.body === null) {
-    //     return "retweet";
-    //   }
-
-      if (props.comment.shared && props.comment.body !== null) {
-		return defineAsyncComponent(() => import('./Share.vue'));
+      if (props.comment.parent) {
+        return defineAsyncComponent(() => import("./Reply.vue"));
       }
 
-      return defineAsyncComponent(() => import('./Default.vue'));
-    });
+      if (props.comment.shared && props.comment.body === null) {
+        return defineAsyncComponent(() => import("./Retweet.vue"));
+      }
 
+      if (props.comment.shared && props.comment.body !== null) {
+        return defineAsyncComponent(() => import("./Share.vue"));
+      }
+
+      return defineAsyncComponent(() => import("./Default.vue"));
+    });
 
     const options = resolveOptions(props.comment.created_by.username);
 
@@ -79,7 +75,6 @@ export default {
       showMenu,
       options,
 
-      
       tweetType,
       likeThread,
       handleSelect,

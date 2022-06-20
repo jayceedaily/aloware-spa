@@ -7,11 +7,11 @@ const routes = [
     name: 'Home',
     component: Home
   },
-  // {
-  //   path: '/thread/:id',
-  //   name: 'Thread',
-  //   component: import('../views/Thread/Show')
-  // },
+  {
+    path: '/thread/:id',
+    name: 'Thread',
+    component: import('../views/Thread/Show')
+  },
   {
     path: '/:username',
     name: 'Profile',

@@ -10,13 +10,16 @@
         {{ comment.replies_count }}
       </div>
     </div>
-    <div>
+    <div class="w-10 flex items-center">
       <button
         class="hover:bg-green-100 hover:text-green-500 py-2 px-2 rounded-full"
         @click="showShareOption = !showShareOption"
       >
         <HeroIcon icon="RefreshIcon" class="h-5 w-5" />
       </button>
+      <div v-if="comment.children_count">
+        {{ comment.children_count }}
+      </div>
       <Option
         v-if="showShareOption"
         @close="showShareOption = !showShareOption"
@@ -47,6 +50,12 @@
     >
       <HeroIcon icon="UploadIcon" class="h-5 w-5" />
     </button>
+    <!-- <button
+      v-if="comment.created_by.id === 1"
+      class="hover:text-blue-500 hover:bg-blue-200 hover-dark:bg-red-100 py-2 px-2 rounded-full"
+    >
+      <HeroIcon icon="ChartBarIcon" class="h-5 w-5" />
+    </button> -->
   </div>
 </template>
 

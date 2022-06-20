@@ -1,12 +1,10 @@
 <template>
-  <div
-    class="pt-3 pb-1 px-3 border-b dark:border-gray-700 border-gray-300 dark:text-gray-300"
-  >
-    {{ type }}
+  <div class="pt-3 pb-1 px-3 dark:text-gray-300">
     <div class="flex">
       <FakeAvatar
-        class="flex-shrink-0 w-10 h-10 mr-2"
+        class="flex-shrink-0 w-10 mr-2"
         :value="comment.created_by.name"
+        :linked="linked"
       />
       <div class="flex-1">
         <div>
@@ -16,13 +14,12 @@
             :datetime="comment.created_at"
           />
         </div>
-		<div>
+        <div>
+          <CommentBody v-if="comment.body" :comment="comment" />
+          <slot name="body" />
+        </div>
 
-		<CommentBody :comment="comment"/>
-		<slot name="body" />
-		</div>
-		
-       <ActionBar :comment="comment"/>
+        <ActionBar :comment="comment" />
       </div>
       <div>
         <button
@@ -51,9 +48,9 @@ import FakeAvatar from "../FakeAvatar.vue";
 import resolveOptions from "./comment-option";
 import HeroIcon from "../HeroIcon/Index.vue";
 import Nameplate from "./components/Nameplate.vue";
-import ActionBar from './components/ActionBar.vue';
-import CommentBody from './components/CommentBody.vue';
-import CommentMini from '../CommentMini.vue';
+import ActionBar from "./components/ActionBar.vue";
+import CommentBody from "./components/CommentBody.vue";
+import CommentMini from "../CommentMini.vue";
 
 export default {
   name: "Comment",
@@ -61,6 +58,10 @@ export default {
     comment: {
       type: Object,
       required: false,
+    },
+    linked: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -72,28 +73,10 @@ export default {
     ActionBar,
     CommentBody,
     CommentMini,
-	
   },
 
   setup(props) {
     const showMenu = ref(false);
-
-
-    const type = computed(() => {
-      if (props.comment.parent) {
-        return "reply";
-      }
-
-      if (props.comment.shared && props.comment.body === null) {
-        return "retweet";
-      }
-
-      if (props.comment.shared && props.comment.body !== null) {
-        return "share";
-      }
-
-      return "default";
-    });
 
     const options = resolveOptions(props.comment.created_by.username);
 
@@ -121,9 +104,7 @@ export default {
       moment,
       showMenu,
       options,
-     
 
-      type,
       likeThread,
       handleSelect,
     };

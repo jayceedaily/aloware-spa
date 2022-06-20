@@ -5,7 +5,10 @@
         {{ name }}
       </div>
 
-      <div>@{{ username }}</div>
+      <div class="flex">
+        @{{ username }}
+        <span><HeroIcon icon="BadgeCheckIcon" type="solid" class="ml-1 w-5"/></span>
+      </div>
 
       <div class="text-gray-600 font-normal">
         - {{ moment(datetime).fromNow() }}
@@ -16,6 +19,7 @@
 
 <script>
 import moment from "moment";
+import HeroIcon from "../../HeroIcon/Index";
 export default {
   props: {
     username: {
@@ -27,6 +31,9 @@ export default {
     datetime: {
       type: String,
     },
+  },
+  components: {
+    HeroIcon,
   },
   setup() {
     return { moment };
